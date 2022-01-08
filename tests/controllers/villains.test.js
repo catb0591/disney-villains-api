@@ -1,15 +1,25 @@
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const chai = require('chai')
-const { describe, it } = require('mocha')
+const { describe, it, before, afterEach } = require('mocha')
 const models = require('../../models')
 const { getAll, getBySlug, createNew } = require('../../controllers/villains')
-const { villainsList, singleVillain, villainSubmitted } = require('./mocks')
+const { villainsList, singleVillain, villainSubmitted, incompleteVillain } = require('./mocks')
 
 chai.use(sinonChai)
 const { expect } = chai
 
 describe('controllers - villains', () => {
+  let stubbedFindOne
+
+  before(() => {
+    stubbedFindOne = sinon.stub(models.villains, 'findOne')
+  })
+
+  afterEach(() => {
+    stubbedFindOne.resetBehavior()
+  })
+
   describe('getAll', () => {
     it('retrieves a list of villains from the database and call response.send() with that list', async () => {
       const stubbedFindAll = sinon.stub(models.villains, 'findAll').returns(villainsList)
@@ -26,7 +36,7 @@ describe('controllers - villains', () => {
   describe('getBySlug', () => {
     it('retrieves the villain associated with the provided slug from the database and calls response.send with it',
       async () => {
-        const stubbedFindOne = sinon.stub(models.villains, 'findOne').returns(singleVillain)
+        stubbedFindOne.returns(singleVillain)
         const request = { params: { slug: 'Gaston' } }
         const stubbedSend = sinon.stub()
         const response = { send: stubbedSend }
@@ -36,6 +46,19 @@ describe('controllers - villains', () => {
         expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'Gaston' } })
         expect(stubbedSend).to.have.been.calledWith(singleVillain)
       })
+
+    it('return a 404 status when no villain is found', async () => {
+      const request = { params: { slug: 'not-found' } }
+      const stubbedSendStatus = sinon.stub()
+      const response = { sendStatus: stubbedSendStatus }
+
+      stubbedFindOne.returns(null)
+
+      await getBySlug(request, response)
+
+      expect(stubbedFindOne).to.have.been.calledWith({ where: { slug: 'not-found' } })
+      expect(stubbedSendStatus).to.have.been.calledWith(404)
+    })
   })
 
   describe('createNew', () => {
@@ -51,6 +74,18 @@ describe('controllers - villains', () => {
       expect(stubbedCreate).to.have.been.calledWith(villainSubmitted)
       expect(stubbedStatus).to.have.been.calledWith(201)
       expect(stubbedSend).to.have.been.calledWith(singleVillain)
+    })
+
+    it('return a 404 status when villain can not be added', async () => {
+      const request = { body: incompleteVillain }
+      const stubbedSend = sinon.stub().returns('Error')
+      const stubbedStatus = sinon.stub().returns({ send: stubbedSend })
+      const response = { status: stubbedStatus }
+
+      await createNew(request, response)
+
+      expect(stubbedStatus).to.have.been.calledWith(404)
+      expect(stubbedSend).to.have.been.calledWith('Error')
     })
   })
 })

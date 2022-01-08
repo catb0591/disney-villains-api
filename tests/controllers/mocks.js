@@ -24,4 +24,9 @@ const villainSubmitted = {
   slug: 'gaston'
 }
 
-module.exports = { villainsList, singleVillain, villainSubmitted }
+const incompleteVillain = {
+  name: 'Gaston',
+  movie: 'Beauty and the Beast',
+}
+
+module.exports = { villainsList, singleVillain, villainSubmitted, incompleteVillain }
