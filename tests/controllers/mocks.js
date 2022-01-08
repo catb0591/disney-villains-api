@@ -9,13 +9,19 @@ const villainsList = [{
 }, {
   name: 'Gaston',
   movie: 'Beauty and the Beast',
-  slug: 'gaston',
+  slug: 'gaston'
 }]
 
 const singleVillain = {
   name: 'Gaston',
   movie: 'Beauty and the Beast',
-  slug: 'gaston',
+  slug: 'gaston'
 }
 
-module.exports = { villainsList, singleVillain }
+const villainSubmitted = {
+  name: 'Gaston',
+  movie: 'Beauty and the Beast',
+  slug: 'gaston'
+}
+
+module.exports = { villainsList, singleVillain, villainSubmitted }
