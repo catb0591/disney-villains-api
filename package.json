@@ -1,0 +1,29 @@
+{
+  "name": "disney-villains-api",
+  "version": "1.0.0",
+  "description": "In this two part exercise you are tasked with create a REST API for accessing Disney Villain data, complete with test suite.",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha tests/**/*.test.js",
+    "dev": "nodemon index.js",
+    "lint": "./node_modules/.bin/eslint --format codeframe .",
+    "lint:fix": "./node_modules/.bin/eslint --fix --format codeframe ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "eslint": "^8.4.1",
+    "eslint-formatter-codeframe": "^7.32.1",
+    "mocha": "^9.1.3",
+    "nodemon": "^2.0.15",
+    "sinon": "^12.0.1",
+    "sinon-chai": "^3.7.0"
+  }
+}
